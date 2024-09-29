@@ -43,7 +43,7 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@orders-db:5432/orders
   
   payments-ms:
-    container_name: products-ms
+    container_name: payments-ms
     build: ./payments-ms
     ports:
       - "3003:3003"
