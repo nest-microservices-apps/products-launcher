@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+  nats-server:
+    image: nats:latest
+
+  client-gateway:
+    build:
+      context: ./client-gateway
+      dockerfile: dockerfile.prod
+    image: client-gateway-produccion
+    ports:
+      - ${CLIENT_GATEWAY_PORT}:${CLIENT_GATEWAY_PORT}
+    environment:
+      - PORT=${CLIENT_GATEWAY_PORT}
+      - NATS_SERVERS_URL=nats://nats-server:4222
+  
+  auth-ms:
+    build:
+      context: ./auth-ms
+      dockerfile: dockerfile.prod
+    image: auth-ms-produccion
+    environment:
+      - PORT=3000
+      - NATS_SERVERS_URL=nats://nats-server:4222
+      - DATABASE_URL=${AUTH_DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+
+  products-ms:
+    build:
+      context: ./products-ms
+      dockerfile: dockerfile.prod
+    image: products-ms-produccion
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3000
+      - NATS_SERVERS_URL=nats://nats-server:4222
+      - DATABASE_URL=file:./dev.db
+  
+  orders-ms:
+    build:
+      context: ./orders-ms
+      dockerfile: dockerfile.prod
+      args:
+        - ORDERS_DATABASE_URL=${ORDERS_DATABASE_URL}
+    image: orders-ms-produccion
+    environment:
+      - PORT=3000
+      - NATS_SERVERS_URL=nats://nats-server:4222
+      - DATABASE_URL=${ORDERS_DATABASE_URL}
+  
+  payments-ms:
+    build:
+      context: ./payments-ms
+      dockerfile: dockerfile.prod
+    image: payments-ms-produccion
+    ports:
+      - ${PAYMENTS_MS_PORT}:${PAYMENTS_MS_PORT}
+    environment:
+      - PORT=${PAYMENTS_MS_PORT}
+      - NATS_SERVERS_URL=nats://nats-server:4222
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - STRIPE_SUCCESS_URL=${STRIPE_SUCCESS_URL}
+      - STRIPE_CANCEL_URL=${STRIPE_CANCEL_URL}
