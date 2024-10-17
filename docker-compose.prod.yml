@@ -8,7 +8,7 @@ services:
     build:
       context: ./client-gateway
       dockerfile: dockerfile.prod
-    image: client-gateway-produccion
+    image: southamerica-west1-docker.pkg.dev/tienda-microservices-test/image-registry/client-gateway # antes de crear las imagenes crear repositorio en google cloud
     ports:
       - ${CLIENT_GATEWAY_PORT}:${CLIENT_GATEWAY_PORT}
     environment:
@@ -19,7 +19,7 @@ services:
     build:
       context: ./auth-ms
       dockerfile: dockerfile.prod
-    image: auth-ms-produccion
+    image: southamerica-west1-docker.pkg.dev/tienda-microservices-test/image-registry/auth-ms
     environment:
       - PORT=3000
       - NATS_SERVERS_URL=nats://nats-server:4222
@@ -30,7 +30,7 @@ services:
     build:
       context: ./products-ms
       dockerfile: dockerfile.prod
-    image: products-ms-produccion
+    image: southamerica-west1-docker.pkg.dev/tienda-microservices-test/image-registry/products-ms
     ports:
       - "3001:3001"
     environment:
@@ -44,7 +44,7 @@ services:
       dockerfile: dockerfile.prod
       args:
         - ORDERS_DATABASE_URL=${ORDERS_DATABASE_URL}
-    image: orders-ms-produccion
+    image: southamerica-west1-docker.pkg.dev/tienda-microservices-test/image-registry/orders-ms
     environment:
       - PORT=3000
       - NATS_SERVERS_URL=nats://nats-server:4222
@@ -54,7 +54,7 @@ services:
     build:
       context: ./payments-ms
       dockerfile: dockerfile.prod
-    image: payments-ms-produccion
+    image: southamerica-west1-docker.pkg.dev/tienda-microservices-test/image-registry/payments-ms
     ports:
       - ${PAYMENTS_MS_PORT}:${PAYMENTS_MS_PORT}
     environment:
