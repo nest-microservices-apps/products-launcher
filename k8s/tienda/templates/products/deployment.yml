@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: products-ms
+  name: products-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: products-ms
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: products-ms
+    spec:
+      containers:
+      - image: southamerica-west1-docker.pkg.dev/tienda-microservices-test/image-registry/products-ms
+        name: products-ms
+        env:
+        - name: PORT
+          value: "3000"
+        - name: NATS_SERVERS_URL
+          value: "nats://nats"
+        - name: DATABASE_URL
+          value: "file:./dev.db"
+        resources: {}
+status: {}
+ 

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: payments-ms
+  name: payments-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payments-ms
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: payments-ms
+    spec:
+      containers:
+      - image: southamerica-west1-docker.pkg.dev/tienda-microservices-test/image-registry/payments-ms
+        name: payments-ms
+        env:
+        - name: PORT
+          value: "3000"
+        - name: NATS_SERVERS_URL
+          value: "nats://nats"
+        - name: STRIPE_SUCCESS_URL
+          value: "http://localhost:3003/payments/success"
+        - name: STRIPE_CANCEL_URL
+          value: "http://localhost:3003/payments/cancelled"
+        - name: STRIPE_WEBHOOK_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: payments-secrets
+              key: stripe_webhook_secret
+        - name: STRIPE_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: payments-secrets
+              key: stripe_secret_key
+        resources: {}
+status: {}
